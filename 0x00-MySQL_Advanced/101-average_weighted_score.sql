@@ -1,6 +1,6 @@
--- Create the stored procedure to compute average weighted score for all users
-DELIMITER //
-
+-- Create the stored procedure to compute average 
+-- weighted score for all users
+DELIMITER $$
 CREATE PROCEDURE ComputeAverageWeightedScoreForUsers()
 BEGIN
     DECLARE done INT DEFAULT 0;
@@ -15,12 +15,9 @@ BEGIN
             LEAVE read_loop;
         END IF;
 
-        CALL ComputeAverageWeightedScoreForUser(userId);
+        CALL ComputeAverageWeightedScoreForUser();
     END LOOP;
 
     CLOSE userCursor;
-END;
-
-//
-
+END $$
 DELIMITER ;
