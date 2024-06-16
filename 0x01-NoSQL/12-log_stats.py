@@ -6,8 +6,8 @@ from pymongo import MongoClient
 def log_stats():
     """Provides some stats about Nginx logs stored in MongoDB"""
     client = MongoClient('mongodb://127.0.0.1:27017')
-    db = client.logs
-    collection = db.nginx
+    collection = client.logs.nginx
+
     total_logs = collection.count_documents({})
     get_logs = len(list(collection.find({'method': 'GET'})))
     post_logs = len(list(collection.find({'method': 'POST'})))
@@ -20,11 +20,11 @@ def log_stats():
 
     print(f"{total_logs} logs")
     print("Methods:")
-    print(f"\tmethod GET: {get_logs}")
-    print(f"\tmethod POST: {post_logs}")
-    print(f"\tmethod PUT: {put_logs}")
-    print(f"\tmethod PATCH: {patch_logs}")
-    print(f"\tmethod DELETE: {delete_logs}")
+    print(f"    method GET: {get_logs}")
+    print(f"    method POST: {post_logs}")
+    print(f"    method PUT: {put_logs}")
+    print(f"    method PATCH: {patch_logs}")
+    print(f"    method DELETE: {delete_logs}")
     print(f"{status_check} status check")
 
 
