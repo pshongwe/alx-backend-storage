@@ -10,11 +10,11 @@ def get_nginx_stats(collection):
     print("Methods:")
     methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
     for method in methods:
-        method_count = collection.count_documents({'method': method})
-        print(f"    method {method}: {method_count}")
+        method_count = len(list(collection.find({'method': method})))
+        print(f"\tmethod {method}: {method_count}")
 
     get_status = {'method': 'GET', 'path': '/status'}
-    status_check_count = collection.count_documents(get_status)
+    status_check_count = len(list(collection.find(get_status)))
     print(f"{status_check_count} status check")
 
 
