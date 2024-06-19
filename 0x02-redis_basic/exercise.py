@@ -34,6 +34,22 @@ def call_history(method: Callable) -> Callable:
     return wrapper
 
 
+def replay(method: Callable):
+    """replay"""
+    input_key = method.__qualname__ + ":inputs"
+    output_key = method.__qualname__ + ":outputs"
+    redis_instance = method.__self__._redis
+
+    inputs = redis_instance.lrange(input_key, 0, -1)
+    outputs = redis_instance.lrange(output_key, 0, -1)
+
+    print(f"{method.__qualname__} was called {len(inputs)} times:")
+    for input_data, output_data in zip(inputs, outputs):
+        a = method.__qualname__
+        b = input_data.decode('utf-8')
+        print(f"{a}(*{b}) -> {output_data.decode('utf-8')}")
+
+
 class Cache:
     """Cache class"""
     def __init__(self):
