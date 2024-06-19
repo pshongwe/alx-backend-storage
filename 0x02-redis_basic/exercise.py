@@ -87,9 +87,11 @@ class Cache:
 if __name__ == "__main__":
     cache = Cache()
 
-    data = b"hello"
-    key = cache.store(data)
-    print(key)
+    s1 = cache.store("foo")
+    print(s1)
+    s2 = cache.store("bar")
+    print(s2)
+    s3 = cache.store(42)
+    print(s3)
 
-    local_redis = redis.Redis()
-    print(local_redis.get(key))
+    replay(cache.store)
