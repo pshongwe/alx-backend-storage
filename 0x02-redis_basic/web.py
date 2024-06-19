@@ -20,10 +20,10 @@ def cache_page(func: Callable) -> Callable:
         cache_client.incr(count_key)
         cached_content = cache_client.get(f"result:{url}")
         if cached_content:
-            return cached_content.decode('utf-8')
+            return cached_content.decode("utf-8")
         response_content = func(url)
-        cache_client.set(f'count:{url}', 0)
-        cache_client.setex(url, expiration, response_content)
+        cache_client.set(f"count:{url}", 0)
+        cache_client.setex(f"result:{url}", 10, response_content)
 
         return response_content
     return wrapper
