@@ -20,7 +20,7 @@ def cache_page(expiration: int = 10):
             """wrapper"""
             count_key = f"count:{url}"
             cache_client.incr(count_key)
-            cached_content = cache_client.get(url)
+            cached_content = cache_client.get(f"result:{url}")
             if cached_content:
                 return cached_content.decode('utf-8')
             response_content = func(url)
