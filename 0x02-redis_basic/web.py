@@ -33,5 +33,4 @@ def cache_page(method: Callable) -> Callable:
 @cache_page
 def get_page(url: str) -> str:
     """Fetch the HTML content of the specified URL."""
-    response = requests.get(url)
-    return response.text
+    return requests.get(url).text
