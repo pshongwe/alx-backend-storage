@@ -33,7 +33,7 @@ def track_and_cache(expiration: int = 10):
 
 
 @track_and_cache()
-def fetch_url_content(url: str) -> str:
+def get_page(url: str) -> str:
     """Fetch the HTML content of the specified URL."""
     response = requests.get(url)
     return response.text
@@ -46,7 +46,7 @@ if __name__ == "__main__":
     )
 
     for _ in range(3):
-        content = fetch_url_content(test_url)
+        content = get_page(test_url)
         print(content[:100])  # Print the first 100 characters of the content
 
     access_count = cache_client.get(f"access_count:{test_url}")
