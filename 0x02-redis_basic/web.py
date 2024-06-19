@@ -16,14 +16,15 @@ def cache_page(expiration: int = 10):
     def decorator(func: Callable) -> Callable:
         """deco"""
         @wraps(func)
-        def wrapper(url: str, *args, **kwargs) -> str:
+        def wrapper(url) -> str:
             """wrapper"""
             count_key = f"count:{url}"
             cache_client.incr(count_key)
             cached_content = cache_client.get(url)
             if cached_content:
                 return cached_content.decode('utf-8')
-            response_content = func(url, *args, **kwargs)
+            response_content = func(url)
+            cache_client.set(f'count:{url}', 0)
             cache_client.setex(url, expiration, response_content)
 
             return response_content
