@@ -9,6 +9,8 @@ from typing import Callable
 
 
 cache_client = redis.Redis()
+"""module-level Redis client.
+"""
 
 
 def cache_page(method: Callable) -> Callable:
