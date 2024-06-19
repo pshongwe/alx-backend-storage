@@ -11,9 +11,9 @@ from typing import Callable
 cache_client = redis.Redis()
 
 
-def cache_page(func: Callable) -> Callable:
+def cache_page(method: Callable) -> Callable:
     """deco cache"""
-    @wraps(func)
+    @wraps(method)
     def wrapper(url) -> str:
         """wrapper"""
         count_key = f"count:{url}"
