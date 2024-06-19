@@ -1,52 +1,53 @@
 #!/usr/bin/env python3
 """
-Web cache and tracker
+Web request caching and tracking module
 """
-import requests
 import redis
+import requests
 from functools import wraps
 from typing import Callable
 
 
-redis_client = redis.Redis()
+cache_client = redis.Redis()
 
 
-def cache_with_expiration(expiration: int):
-    """cache with ttl"""
-    def decorator(method: Callable) -> Callable:
-        """deco"""
-        @wraps(method)
+def track_and_cache(expiration: int = 10):
+    """Decorator to track URL access and cache the response with expiration."""
+    def decorator(func: Callable) -> Callable:
+        @wraps(func)
         def wrapper(url: str, *args, **kwargs) -> str:
-            """wrapper"""
-            count_key = f"count:{url}"
-            redis_client.incr(count_key)
+            access_count_key = f"access_count:{url}"
+            cache_client.incr(access_count_key)
 
-            cached_content = redis_client.get(url)
+            cached_content = cache_client.get(f"cached_response:{url}")
             if cached_content:
                 return cached_content.decode('utf-8')
 
-            result = method(url, *args, **kwargs)
+            response_content = func(url, *args, **kwargs)
+            cache_client.setex(f"cached_response:{url}",
+                               expiration, response_content)
 
-            redis_client.setex(url, expiration, result)
-
-            return result
+            return response_content
         return wrapper
     return decorator
 
 
-@cache_with_expiration(10)
-def get_page(url: str) -> str:
+@track_and_cache()
+def fetch_url_content(url: str) -> str:
+    """Fetch the HTML content of the specified URL."""
     response = requests.get(url)
     return response.text
 
 
 if __name__ == "__main__":
-    domain = "slowwly.robertomurray.co.uk"
-    url = f"http://{domain}/delay/5000/url/http://www.example.com"
+    test_url = (
+        "http://slowwly.robertomurray.co.uk/delay/5000/url/"
+        "http://www.example.com"
+    )
 
     for _ in range(3):
-        content = get_page(url)
-        print(content[:100])
+        content = fetch_url_content(test_url)
+        print(content[:100])  # Print the first 100 characters of the content
 
-    access_count = redis_client.get(f"count:{url}")
-    print(f"Access count for {url}: {access_count.decode('utf-8')}")
+    access_count = cache_client.get(f"access_count:{test_url}")
+    print(f"Access count for {test_url}: {access_count.decode('utf-8')}")
