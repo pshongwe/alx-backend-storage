@@ -16,15 +16,15 @@ def track_and_cache(expiration: int = 10):
     def decorator(func: Callable) -> Callable:
         @wraps(func)
         def wrapper(url: str, *args, **kwargs) -> str:
-            access_count_key = f"access_count:{url}"
+            access_count_key = f"count:{url}"
             cache_client.incr(access_count_key)
 
-            cached_content = cache_client.get(f"cached_response:{url}")
+            cached_content = cache_client.get(f"count:{url}")
             if cached_content:
                 return cached_content.decode('utf-8')
 
             response_content = func(url, *args, **kwargs)
-            cache_client.setex(f"cached_response:{url}",
+            cache_client.setex(f"count:{url}",
                                expiration, response_content)
 
             return response_content
