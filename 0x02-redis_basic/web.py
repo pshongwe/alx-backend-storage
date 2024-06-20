@@ -18,14 +18,14 @@ def cache_page(method: Callable) -> Callable:
     @wraps(method)
     def wrapper(url) -> str:
         """wrapper"""
-        count_key = f"count:{url}"
+        count_key = f'count:{url}'
         cache_client.incr(count_key)
-        result = cache_client.get(f"result:{url}")
+        result = cache_client.get(f'result:{url}')
         if result:
-            return result.decode("utf-8")
+            return result.decode('utf-8')
         result = method(url)
-        cache_client.set(f"count:{url}", 0)
-        cache_client.setex(f"result:{url}", 10, result)
+        cache_client.set(f'count:{url}', 0)
+        cache_client.setex(f'result:{url}', 10, result)
         return result
     return wrapper
 
