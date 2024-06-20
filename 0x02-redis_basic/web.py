@@ -42,12 +42,10 @@ if __name__ == "__main__":
         "http://www.example.com"
     )
 
-    # Fetch the page multiple times to test caching and tracking
     for _ in range(3):
         content = get_page(test_url)
-        print(content[:100])  # Print the first 100 characters of the content
+        print(content[:100])
 
-    # Print the access count for the URL
     access_count = redis_store.get(f"count:{test_url}")
     if access_count is not None:
         print(f"Access count for {test_url}: {access_count.decode('utf-8')}")
