@@ -70,6 +70,7 @@ class Cache:
         key: str,
         fn: Optional[Callable] = None
     ) -> Union[str, bytes, int, float, None]:
+        """get"""
         data = self._redis.get(key)
         if data is None:
             return None
@@ -78,7 +79,9 @@ class Cache:
         return data
 
     def get_str(self, key: str) -> Optional[str]:
+        """get string"""
         return self.get(key, fn=lambda d: d.decode('utf-8'))
 
     def get_int(self, key: str) -> Optional[int]:
+        """get init"""
         return self.get(key, fn=int)
