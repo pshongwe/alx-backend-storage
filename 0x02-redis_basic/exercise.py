@@ -70,7 +70,7 @@ class Cache:
         key: str,
         fn: Optional[Callable] = None
     ) -> Union[str, bytes, int, float, None]:
-        """get"""
+        """retrieve value from storage"""
         data = self._redis.get(key)
         if data is None:
             return None
