@@ -83,5 +83,5 @@ class Cache:
         return self.get(key, fn=lambda d: d.decode('utf-8'))
 
     def get_int(self, key: str) -> Optional[int]:
-        """get init"""
+        """get int"""
         return self.get(key, fn=int)
